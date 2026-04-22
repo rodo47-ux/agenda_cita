@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% block title %}Agenda · PatasCitas{% endblock %}
+
+{% block content %}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <div>
+    <h2 class="fw-bold mb-0">
+      <i class="bi bi-calendar2-week me-2 text-danger"></i>Agenda de Citas
+    </h2>
+    <p class="text-muted mb-0 small">Gestiona las citas de tus pacientes</p>
+  </div>
+  <a href="{{ url_for('agendar') }}" class="btn btn-outline-danger fw-semibold rounded-pill px-4">
+    <i class="bi bi-plus-circle me-1"></i>Nueva Cita
+  </a>
+</div>
+
+{% if citas %}
+<div class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-4">
+  {% for cita in citas %}
+  <div class="col">
+    <div class="card h-100 border-0 shadow-sm">
+
+      <div class="card-header navbar-gradient text-white d-flex justify-content-between align-items-center">
+        <span class="fw-bold fs-6">
+          <i class="bi bi-heart-fill me-2 text-warning"></i>{{ cita.mascota }}
+        </span>
+        <span class="badge bg-white text-danger fw-semibold">{{ cita.especie }}</span>
+      </div>
+
+      <div class="card-body">
+        <p class="mb-2">
+          <i class="bi bi-person-fill text-danger me-2"></i>
+          <span class="fw-semibold">Propietario:</span> {{ cita.propietario }}
+        </p>
+        <p class="mb-0">
+          <i class="bi bi-calendar-event text-warning me-2"></i>
+          <span class="fw-semibold">Fecha:</span>
+          <span class="badge bg-danger bg-opacity-10 text-danger border border-danger ms-1">
+            {{ cita.fecha }}
+          </span>
+        </p>
+      </div>
+
+      <div class="card-footer bg-white border-top d-flex gap-2 pb-3">
+        <a href="{{ url_for('modificar', id=cita.id) }}"
+           class="btn btn-outline-warning btn-sm fw-semibold flex-fill rounded-pill text-dark">
+          <i class="bi bi-pencil me-1"></i>Editar
+        </a>
+        <form method="POST" action="{{ url_for('cancelar', id=cita.id) }}"
+              onsubmit="return confirm('¿Cancelar la cita de {{ cita.mascota }}?');"
+              class="flex-fill">
+          <button type="submit"
+                  class="btn btn-outline-danger btn-sm fw-semibold w-100 rounded-pill">
+            <i class="bi bi-trash me-1"></i>Cancelar
+          </button>
+        </form>
+      </div>
+
+    </div>
+  </div>
+  {% endfor %}
+</div>
+
+{% else %}
+<div class="text-center py-5 text-secondary">
+  <i class="bi bi-calendar-x display-1"></i>
+  <h4 class="mt-3">No hay citas programadas</h4>
+  <p>¡Agenda la primera cita médica!</p>
+  <a href="{{ url_for('agendar') }}"
+     class="btn btn-outline-danger fw-semibold rounded-pill px-4 mt-2">
+    <i class="bi bi-plus-circle me-1"></i>Agendar Cita
+  </a>
+</div>
+{% endif %}
+
+{% endblock %}
